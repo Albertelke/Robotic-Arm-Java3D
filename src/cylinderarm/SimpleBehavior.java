@@ -24,7 +24,8 @@ import javax.vecmath.Vector3f;
  */
 public class SimpleBehavior extends Behavior 
 {
-     private WakeupCondition wc = new WakeupOnElapsedTime(70);   //aktualizacja co 70 ms
+    public TransformGroup CylinderR;
+     private WakeupCondition wc = new WakeupOnElapsedTime(70);   //will update every 70 ms
     @Override
     public void initialize()
     {
@@ -36,13 +37,19 @@ public class SimpleBehavior extends Behavior
     {
         update();
     }
-    SimpleBehavior()
+    SimpleBehavior(TransformGroup CylinderR)
          {
-            // this.targetTG = targetTG;
+             this.CylinderR = CylinderR;
             
          }
+    public void SetInitCylinder()
+    {
+        Transform3D setUp = new Transform3D();
+        setUp.setTranslation(new Vector3f(0.0f,2.5f,0.f));
+        CylinderR.setTransform(setUp);
+    }
      private void update()
          {
-         
+             SetInitCylinder();
          }
 }
