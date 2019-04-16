@@ -27,8 +27,8 @@ public class SimpleBehavior extends Behavior
     public TransformGroup CylinderR;
     public TransformGroup Handle;
     public float handlepos=2.0f;
-    //will store information about input, [0]=Left Arrow[1]=RightArrow,
-    public boolean[] IsKeyPressed = new boolean[2];
+    //will store information about input, [0]=Left Arrow[1]=RightArrow,[2] up,[3] down
+    public boolean[] IsKeyPressed = new boolean[4];
     public float CylinderR_Angle=0.f;
      private WakeupCondition wc = new WakeupOnElapsedTime(70);   //will update every 70 ms
   
@@ -55,6 +55,12 @@ public class SimpleBehavior extends Behavior
         if(IsKeyPressed[0]) { CylinderR_Angle+=0.3f;}
         if(IsKeyPressed[1]) CylinderR_Angle-=0.3f;
     }
+    public void CheckForHandleMovement()
+    {
+        
+        if(IsKeyPressed[2]&&handlepos<5.f) handlepos+=0.3f;
+        if(IsKeyPressed[3]&&handlepos>1.5f)handlepos-=0.3f;
+    }
     public void SetCylinder()
     {
         Transform3D setUp = new Transform3D();
@@ -78,6 +84,7 @@ public class SimpleBehavior extends Behavior
      private void update()
          {
              CheckForRotation();
+             CheckForHandleMovement();
              SetCylinder();
              SetHandle();
          }
