@@ -52,8 +52,10 @@ public class CylinderArm  extends Applet implements KeyListener
 {
     SimpleBehavior ArmBehavior;
     Appearance ap = new Appearance();
+    Appearance ap_Box = new Appearance();
     Color3f TestCol = new Color3f(0.941f, 0.941f, 0.937f);
     Color3f ultramaryna = new Color3f(0.227f, 0.909f, 0.949f); //
+    Color3f black = new Color3f(1.0f,1.0f,1.0f);
     //KeyPressed, keyReleased ,keyTyped will allow handling inputs
     public void keyPressed(KeyEvent e) 
     {
@@ -63,6 +65,8 @@ public class CylinderArm  extends Applet implements KeyListener
            if (e.getKeyCode()==KeyEvent.VK_RIGHT) {ArmBehavior.IsKeyPressed[1] = true;}
            if (e.getKeyCode()==KeyEvent.VK_UP) {ArmBehavior.IsKeyPressed[2] = true;}   
            if (e.getKeyCode()==KeyEvent.VK_DOWN) {ArmBehavior.IsKeyPressed[3] = true;}
+           if (e.getKeyCode()==KeyEvent.VK_COMMA) {ArmBehavior.IsKeyPressed[4] = true;}   
+           if (e.getKeyCode()==KeyEvent.VK_PERIOD) {ArmBehavior.IsKeyPressed[5] = true;}
         
     }
     
@@ -73,6 +77,8 @@ public class CylinderArm  extends Applet implements KeyListener
         if (e.getKeyCode()==KeyEvent.VK_RIGHT) {ArmBehavior.IsKeyPressed[1] = false;}
         if (e.getKeyCode()==KeyEvent.VK_UP) {ArmBehavior.IsKeyPressed[2] = false;}   
         if (e.getKeyCode()==KeyEvent.VK_DOWN) {ArmBehavior.IsKeyPressed[3] = false;}
+        if (e.getKeyCode()==KeyEvent.VK_COMMA) {ArmBehavior.IsKeyPressed[4] = false;}   
+        if (e.getKeyCode()==KeyEvent.VK_PERIOD) {ArmBehavior.IsKeyPressed[5] = false;}
         
     }
      
@@ -99,15 +105,17 @@ public class CylinderArm  extends Applet implements KeyListener
           objRoot.addChild(CylinderR);
           objRoot.addChild(Handle);
           objRoot.addChild(Arm);
-          ap.setMaterial(new Material( ultramaryna,ultramaryna,ultramaryna,ultramaryna,0.1f));
+          ap.setMaterial(new Material( black,black,black,black,0.0f));
+          ap_Box.setMaterial(new Material(black,black,black,black,0.0f));
           //Adds stable, base component
-          transBox.addChild(new Box(0.5f,0.5f,0.5f,Box.GENERATE_TEXTURE_COORDS,ap));
+          transBox.addChild(new Box(0.5f,0.5f,0.5f,Box.GENERATE_TEXTURE_COORDS,ap_Box));
           //Adds Cylinder that can be rotate around own axis
           CylinderR.addChild(new Cylinder(0.25f,5.f,Cylinder.GENERATE_TEXTURE_COORDS,ap));
           //Adds simple texture to ap Appearance
-          TextureLoader loader = new TextureLoader("gfx/Metal_Brushed.png",null);
+          TextureLoader loader = new TextureLoader("gfx/silver.jpg",null);
+          TextureLoader loaderBox = new TextureLoader("gfx/Metal_Black_Brushed.jpg",null);
           //Adds handle that is attached to CylinderR
-          Handle.addChild(new Box(0.5f,0.5f,0.5f,Box.GENERATE_TEXTURE_COORDS,ap));
+          Handle.addChild(new Box(0.5f,0.5f,0.5f,Box.GENERATE_TEXTURE_COORDS,ap_Box));
           //Adds Arm to robot
           Arm.addChild(new Cylinder(0.15f,3f,Cylinder.GENERATE_TEXTURE_COORDS,ap));
           //loads texture image
@@ -115,12 +123,16 @@ public class CylinderArm  extends Applet implements KeyListener
           Texture2D  tx2 = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, mImage.getWidth(), mImage.getHeight());
           tx2.setImage(0, mImage);
           ap.setTexture(tx2);
+          ImageComponent2D BoxImage = loaderBox.getImage( );     
+          Texture2D  tx3 = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, mImage.getWidth(), mImage.getHeight());
+          tx3.setImage(0, BoxImage);
+          ap_Box.setTexture(tx3);
           //Lightning
           BoundingSphere bounds = new BoundingSphere(new Point3d(0.0,0.0,0.0), 1000.0f);
           AmbientLight alldirlight = new AmbientLight(ultramaryna);
           alldirlight.setInfluencingBounds(bounds);
           objRoot.addChild(alldirlight); // adds light in all direction 
-          Color3f lightCol = new Color3f(0.7f, 0.5f, 0.2f);
+          Color3f lightCol = new Color3f(1f, 1f, 1f);
           Vector3f lightDir = new Vector3f(4.0f, -7.0f, -12.0f);
           DirectionalLight light = new DirectionalLight (lightCol,lightDir);
           light.setInfluencingBounds(bounds);
