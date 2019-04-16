@@ -5,6 +5,8 @@
  */
 
 package cylinderarm;
+import com.sun.j3d.loaders.Scene; 
+import com.sun.j3d.loaders.objectfile.ObjectFile; 
 import com.sun.j3d.utils.applet.MainFrame;
 import com.sun.j3d.utils.behaviors.vp.OrbitBehavior;
 import com.sun.j3d.utils.geometry.Box;
@@ -101,6 +103,9 @@ public class CylinderArm  extends Applet implements KeyListener
           TransformGroup Arm=new TransformGroup();
           Arm.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           
+
+        
+          
           objRoot.addChild(transBox);
           objRoot.addChild(CylinderR);
           objRoot.addChild(Handle);
@@ -156,14 +161,17 @@ public class CylinderArm  extends Applet implements KeyListener
          add("Center", canvas3d);
          canvas3d.addKeyListener(this);
          BranchGroup scena = createSceneGraph(); 
-
+         //this transform that will be applied to viewingPlatform will allow us to create better initial view on our scene
+         Transform3D betterView = new Transform3D();
+         betterView.set(new Vector3f(0.0f,2.5f,10f));
          SimpleUniverse simpleU = new SimpleUniverse(canvas3d);
         // simpleU.getViewingPlatform().setNominalViewingTransform();
          OrbitBehavior orbit = new OrbitBehavior(canvas3d, OrbitBehavior.REVERSE_ROTATE); //allow rotating camera with mouse
          orbit.setSchedulingBounds(new BoundingSphere());    
          simpleU.getViewingPlatform().setViewPlatformBehavior(orbit);                        
-         //simpleU.getViewingPlatform().getViewPlatformTransform();  
-         simpleU.getViewingPlatform().setNominalViewingTransform();                      //nice view from the beggining
+         
+       //  simpleU.getViewingPlatform().setNominalViewingTransform();                      //nice view from the beggining automatic
+         simpleU.getViewingPlatform().getViewPlatformTransform().setTransform(betterView);  //this will give better view from beggining 
          simpleU.addBranchGraph(scena);
      }
 
