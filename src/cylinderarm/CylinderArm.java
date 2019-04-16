@@ -61,7 +61,8 @@ public class CylinderArm  extends Applet implements KeyListener
        
            if (e.getKeyCode()==KeyEvent.VK_LEFT) {ArmBehavior.IsKeyPressed[0] = true;}   
            if (e.getKeyCode()==KeyEvent.VK_RIGHT) {ArmBehavior.IsKeyPressed[1] = true;}
-           
+           if (e.getKeyCode()==KeyEvent.VK_UP) {ArmBehavior.IsKeyPressed[2] = true;}   
+           if (e.getKeyCode()==KeyEvent.VK_DOWN) {ArmBehavior.IsKeyPressed[3] = true;}
         
     }
     
@@ -70,7 +71,8 @@ public class CylinderArm  extends Applet implements KeyListener
         //sets false when Released
         if (e.getKeyCode()==KeyEvent.VK_LEFT) {ArmBehavior.IsKeyPressed[0] = false;}   
         if (e.getKeyCode()==KeyEvent.VK_RIGHT) {ArmBehavior.IsKeyPressed[1] = false;}
-    
+        if (e.getKeyCode()==KeyEvent.VK_UP) {ArmBehavior.IsKeyPressed[2] = false;}   
+        if (e.getKeyCode()==KeyEvent.VK_DOWN) {ArmBehavior.IsKeyPressed[3] = false;}
         
     }
      
@@ -90,10 +92,13 @@ public class CylinderArm  extends Applet implements KeyListener
           CylinderR.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           TransformGroup Handle=new TransformGroup();
           Handle.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+          TransformGroup Arm=new TransformGroup();
+          Arm.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           
           objRoot.addChild(transBox);
           objRoot.addChild(CylinderR);
           objRoot.addChild(Handle);
+          objRoot.addChild(Arm);
           ap.setMaterial(new Material( ultramaryna,ultramaryna,ultramaryna,ultramaryna,0.1f));
           //Adds stable, base component
           transBox.addChild(new Box(0.5f,0.5f,0.5f,Box.GENERATE_TEXTURE_COORDS,ap));
@@ -103,6 +108,9 @@ public class CylinderArm  extends Applet implements KeyListener
           TextureLoader loader = new TextureLoader("gfx/Metal_Brushed.png",null);
           //Adds handle that is attached to CylinderR
           Handle.addChild(new Box(0.5f,0.5f,0.5f,Box.GENERATE_TEXTURE_COORDS,ap));
+          //Adds Arm to robot
+          Arm.addChild(new Cylinder(0.15f,3f,Cylinder.GENERATE_TEXTURE_COORDS,ap));
+          //loads texture image
           ImageComponent2D mImage = loader.getImage( );     
           Texture2D  tx2 = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, mImage.getWidth(), mImage.getHeight());
           tx2.setImage(0, mImage);
@@ -118,7 +126,7 @@ public class CylinderArm  extends Applet implements KeyListener
           light.setInfluencingBounds(bounds);
           objRoot.addChild(light);// adds light in specific direction
           
-          ArmBehavior = new SimpleBehavior(CylinderR,Handle);
+          ArmBehavior = new SimpleBehavior(CylinderR,Handle,Arm);
           ArmBehavior.setSchedulingBounds(bounds);
           objRoot.addChild(ArmBehavior);
           
@@ -155,7 +163,7 @@ public class CylinderArm  extends Applet implements KeyListener
   // test.addKeyListener(test);
 
 
-   new MainFrame(test, 1000, 800);
+        new MainFrame(test, 1000, 800);
     }
     
 }
