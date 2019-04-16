@@ -28,8 +28,9 @@ public class SimpleBehavior extends Behavior
     public TransformGroup Handle;
     public TransformGroup Arm;
     public float handlepos=2.0f;
-    //will store information about input, [0]=Left Arrow[1]=RightArrow,[2] up,[3] down
-    public boolean[] IsKeyPressed = new boolean[4];
+    public float Arm_Pos;
+    //will store information about input, [0]=Left Arrow[1]=RightArrow,[2] up,[3] down[4]=<,[5]=>,
+    public boolean[] IsKeyPressed = new boolean[6];
     public float CylinderR_Angle=0.f;
      private WakeupCondition wc = new WakeupOnElapsedTime(70);   //will update every 70 ms
   
@@ -56,6 +57,13 @@ public class SimpleBehavior extends Behavior
     {
         if(IsKeyPressed[0]) { CylinderR_Angle+=0.3f;}
         if(IsKeyPressed[1]) CylinderR_Angle-=0.3f;
+    }
+    
+    public void CheckForArm()
+    {
+        if(IsKeyPressed[5] && Arm_Pos<=0.f ) Arm_Pos +=0.2f;
+        if(IsKeyPressed[4] && Arm_Pos>=-2.4f  )Arm_Pos-=0.2f;
+     
     }
     public void CheckForHandleMovement()
     {
@@ -90,21 +98,24 @@ public class SimpleBehavior extends Behavior
         Transform3D Fin = new Transform3D();
         Transform3D YRot = new Transform3D();
         //move to position and rotate 90 degrees so that will be set in good starting position
-        setUp.setTranslation(new Vector3f(0.0f,handlepos,1.5f));
+        setUp.setTranslation(new Vector3f(0.0f,handlepos,1.5f+Arm_Pos));
         Rot.rotX(toRadians(90));    
         Fin.mul(setUp,Rot);
         //set rotation to be in line with Handle
         Rot = new Transform3D();
         Rot.rotY(CylinderR_Angle);
         Fin.mul(Rot,Fin);
+   
         Arm.setTransform(Fin);
     }
      private void update()
          {
              CheckForRotation();
              CheckForHandleMovement();
+             CheckForArm();
              SetCylinder();
              SetHandle();
              SetArm();
+             
          }
 }
