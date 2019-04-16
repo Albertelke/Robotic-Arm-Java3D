@@ -25,31 +25,60 @@ import javax.vecmath.Vector3f;
 public class SimpleBehavior extends Behavior 
 {
     public TransformGroup CylinderR;
+    public TransformGroup Handle;
+    public float handlepos=2.0f;
+    //will store information about input, [0]=Left Arrow[1]=RightArrow,
+    public boolean[] IsKeyPressed = new boolean[2];
+    public float CylinderR_Angle=0.f;
      private WakeupCondition wc = new WakeupOnElapsedTime(70);   //will update every 70 ms
-    @Override
+  
     public void initialize()
     {
         this.wakeupOn(wc);    
     }
 
-    @Override
-    public void processStimulus(Enumeration enmrtn) 
+   @Override
+    public void processStimulus(Enumeration criteria) 
     {
         update();
+        this.wakeupOn(wc);
     }
-    SimpleBehavior(TransformGroup CylinderR)
-         {
+    
+    SimpleBehavior(TransformGroup CylinderR,TransformGroup Handle)
+     {
              this.CylinderR = CylinderR;
+             this.Handle = Handle;
             
-         }
-    public void SetInitCylinder()
+     }
+    public void CheckForRotation()
+    {
+        if(IsKeyPressed[0]) { CylinderR_Angle+=0.3f;}
+        if(IsKeyPressed[1]) CylinderR_Angle-=0.3f;
+    }
+    public void SetCylinder()
     {
         Transform3D setUp = new Transform3D();
+        Transform3D Rot = new Transform3D();
+        Transform3D Fin = new Transform3D();
         setUp.setTranslation(new Vector3f(0.0f,2.5f,0.f));
-        CylinderR.setTransform(setUp);
+        Rot.rotY(CylinderR_Angle);
+        Fin.mul(Rot,setUp);
+        CylinderR.setTransform(Fin);
+    }
+    public void SetHandle()
+    {
+        Transform3D setUp = new Transform3D();
+        Transform3D Rot = new Transform3D();
+        Transform3D Fin = new Transform3D();
+        setUp.setTranslation(new Vector3f(0.0f,handlepos,0.0f));
+        Rot.rotY(CylinderR_Angle);
+        Fin.mul(Rot,setUp);
+        Handle.setTransform(Fin);
     }
      private void update()
          {
-             SetInitCylinder();
+             CheckForRotation();
+             SetCylinder();
+             SetHandle();
          }
 }
