@@ -26,6 +26,7 @@ public class SimpleBehavior extends Behavior
 {
     public TransformGroup CylinderR;
     public TransformGroup Handle;
+    public TransformGroup Arm;
     public float handlepos=2.0f;
     //will store information about input, [0]=Left Arrow[1]=RightArrow,[2] up,[3] down
     public boolean[] IsKeyPressed = new boolean[4];
@@ -44,10 +45,11 @@ public class SimpleBehavior extends Behavior
         this.wakeupOn(wc);
     }
     
-    SimpleBehavior(TransformGroup CylinderR,TransformGroup Handle)
+    SimpleBehavior(TransformGroup CylinderR,TransformGroup Handle,TransformGroup Arm)
      {
              this.CylinderR = CylinderR;
              this.Handle = Handle;
+             this.Arm = Arm;
             
      }
     public void CheckForRotation()
@@ -59,7 +61,7 @@ public class SimpleBehavior extends Behavior
     {
         
         if(IsKeyPressed[2]&&handlepos<5.f) handlepos+=0.3f;
-        if(IsKeyPressed[3]&&handlepos>1.5f)handlepos-=0.3f;
+        if(IsKeyPressed[3]&&handlepos>1.25f)handlepos-=0.3f;
     }
     public void SetCylinder()
     {
@@ -81,11 +83,28 @@ public class SimpleBehavior extends Behavior
         Fin.mul(Rot,setUp);
         Handle.setTransform(Fin);
     }
+    public void SetArm()
+    {
+        Transform3D setUp = new Transform3D();
+        Transform3D Rot = new Transform3D();
+        Transform3D Fin = new Transform3D();
+        Transform3D YRot = new Transform3D();
+        //move to position and rotate 90 degrees so that will be set in good starting position
+        setUp.setTranslation(new Vector3f(0.0f,handlepos,1.5f));
+        Rot.rotX(toRadians(90));    
+        Fin.mul(setUp,Rot);
+        //set rotation to be in line with Handle
+        Rot = new Transform3D();
+        Rot.rotY(CylinderR_Angle);
+        Fin.mul(Rot,Fin);
+        Arm.setTransform(Fin);
+    }
      private void update()
          {
              CheckForRotation();
              CheckForHandleMovement();
              SetCylinder();
              SetHandle();
+             SetArm();
          }
 }
