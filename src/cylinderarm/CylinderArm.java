@@ -57,12 +57,19 @@ public class CylinderArm  extends Applet implements KeyListener
     //KeyPressed, keyReleased ,keyTyped will allow handling inputs
     public void keyPressed(KeyEvent e) 
     {
-          
+        //sets true when pressed
+       
+           if (e.getKeyCode()==KeyEvent.VK_LEFT) {ArmBehavior.IsKeyPressed[0] = true;}   
+           if (e.getKeyCode()==KeyEvent.VK_RIGHT) {ArmBehavior.IsKeyPressed[1] = true;}
+           
         
     }
     
     public void keyReleased(KeyEvent e)
     {
+        //sets false when Released
+        if (e.getKeyCode()==KeyEvent.VK_LEFT) {ArmBehavior.IsKeyPressed[0] = false;}   
+        if (e.getKeyCode()==KeyEvent.VK_RIGHT) {ArmBehavior.IsKeyPressed[1] = false;}
     
         
     }
@@ -81,9 +88,12 @@ public class CylinderArm  extends Applet implements KeyListener
           transBox.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           TransformGroup CylinderR=new TransformGroup();
           CylinderR.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+          TransformGroup Handle=new TransformGroup();
+          Handle.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           
           objRoot.addChild(transBox);
           objRoot.addChild(CylinderR);
+          objRoot.addChild(Handle);
           ap.setMaterial(new Material( ultramaryna,ultramaryna,ultramaryna,ultramaryna,0.1f));
           //Adds stable, base component
           transBox.addChild(new Box(0.5f,0.5f,0.5f,Box.GENERATE_TEXTURE_COORDS,ap));
@@ -91,6 +101,8 @@ public class CylinderArm  extends Applet implements KeyListener
           CylinderR.addChild(new Cylinder(0.25f,5.f,Cylinder.GENERATE_TEXTURE_COORDS,ap));
           //Adds simple texture to ap Appearance
           TextureLoader loader = new TextureLoader("gfx/Metal_Brushed.png",null);
+          //Adds handle that is attached to CylinderR
+          Handle.addChild(new Box(0.5f,0.5f,0.5f,Box.GENERATE_TEXTURE_COORDS,ap));
           ImageComponent2D mImage = loader.getImage( );     
           Texture2D  tx2 = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, mImage.getWidth(), mImage.getHeight());
           tx2.setImage(0, mImage);
@@ -106,7 +118,7 @@ public class CylinderArm  extends Applet implements KeyListener
           light.setInfluencingBounds(bounds);
           objRoot.addChild(light);// adds light in specific direction
           
-          ArmBehavior = new SimpleBehavior(CylinderR);
+          ArmBehavior = new SimpleBehavior(CylinderR,Handle);
           ArmBehavior.setSchedulingBounds(bounds);
           objRoot.addChild(ArmBehavior);
           
