@@ -30,6 +30,7 @@ public class SimpleBehavior extends Behavior
     public TransformGroup GripperBase;
     public TransformGroup GripperLeft;
     public TransformGroup GripperRight;
+    public TransformGroup TestObj;
     public float handlepos=2.0f;
     public float Arm_Pos;
     public float Gripper_PosL=-0.4f;
@@ -37,7 +38,7 @@ public class SimpleBehavior extends Behavior
     //will store information about input, [0]=Left Arrow[1]=RightArrow,[2] up,[3] down[4]=<,[5]=>,[6] k,[7] l
     public boolean[] IsKeyPressed = new boolean[8];
     public float CylinderR_Angle=0.f;
-     private WakeupCondition wc = new WakeupOnElapsedTime(70);   //will update every 70 ms
+     private WakeupCondition wc = new WakeupOnElapsedTime(20);   //will update every 70 ms
   
     public void initialize()
     {
@@ -51,7 +52,7 @@ public class SimpleBehavior extends Behavior
         this.wakeupOn(wc);
     }
     
-    SimpleBehavior(TransformGroup CylinderR,TransformGroup Handle,TransformGroup Arm,TransformGroup GripperBase,TransformGroup GripperLeft,TransformGroup GripperRight)
+    SimpleBehavior(TransformGroup CylinderR,TransformGroup Handle,TransformGroup Arm,TransformGroup GripperBase,TransformGroup GripperLeft,TransformGroup GripperRight,TransformGroup TestObj)
      {
              this.CylinderR = CylinderR;
              this.Handle = Handle;
@@ -59,31 +60,32 @@ public class SimpleBehavior extends Behavior
              this.GripperBase= GripperBase;
              this.GripperLeft=GripperLeft;
              this.GripperRight=GripperRight;
+             this.TestObj=TestObj;
             
      }
     public void CheckForRotation()
     {
-        if(IsKeyPressed[0]) { CylinderR_Angle+=0.3f;}
-        if(IsKeyPressed[1]) CylinderR_Angle-=0.3f;
+        if(IsKeyPressed[0]) { CylinderR_Angle+=0.01f;}
+        if(IsKeyPressed[1]) CylinderR_Angle-=0.01f;
     }
     
     public void CheckForArm()
     {
-        if(IsKeyPressed[5] && Arm_Pos<=0.f ) Arm_Pos +=0.2f;
-        if(IsKeyPressed[4] && Arm_Pos>=-2.4f  )Arm_Pos-=0.2f;
+        if(IsKeyPressed[5] && Arm_Pos<=0.f ) Arm_Pos +=0.05f;
+        if(IsKeyPressed[4] && Arm_Pos>=-2.4f  )Arm_Pos-=0.05f;
      
     }
     public void CheckForHandleMovement()
     {
         
-        if(IsKeyPressed[2]&&handlepos<5.f) handlepos+=0.3f;
-        if(IsKeyPressed[3]&&handlepos>1.25f)handlepos-=0.3f;
+        if(IsKeyPressed[2]&&handlepos<5.f) handlepos+=0.1f;
+        if(IsKeyPressed[3]&&handlepos>1.25f)handlepos-=0.1f;
     }
     public void CheckForGripperMove()
     {
         
-        if(IsKeyPressed[6]&&Gripper_PosL<-0.2f) {Gripper_PosL+=0.1f; Gripper_PosR-=0.1f;}
-        if(IsKeyPressed[7]&&Gripper_PosL>-0.4f) {Gripper_PosL-=0.1f; Gripper_PosR+=0.1f;}
+        if(IsKeyPressed[6]&&Gripper_PosL<-0.2f) {Gripper_PosL+=0.005f; Gripper_PosR-=0.005f;}
+        if(IsKeyPressed[7]&&Gripper_PosL>-0.4f) {Gripper_PosL-=0.005f; Gripper_PosR+=0.005f;}
     }
     public void SetCylinder()
     {
@@ -163,6 +165,18 @@ public class SimpleBehavior extends Behavior
         GripperRight.setTransform(Fin);
         
     }
+    public void SetTestObj()
+    {
+        Transform3D setUp = new Transform3D();
+        Transform3D Rot = new Transform3D();
+        Transform3D Fin = new Transform3D();
+        setUp.setTranslation(new Vector3f(1.5f,1.f,3.f));
+        //Rot.rotY(CylinderR_Angle);
+        Fin.mul(Rot,setUp);
+        
+        TestObj.setTransform(setUp);
+        
+    }
      private void update()
          {
              CheckForRotation();
@@ -175,6 +189,7 @@ public class SimpleBehavior extends Behavior
              SetGripperBase();
              SetGripperLeft();
              SetGripperRight();
+             SetTestObj();
           
             
              
