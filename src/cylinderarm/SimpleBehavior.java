@@ -28,10 +28,14 @@ public class SimpleBehavior extends Behavior
     public TransformGroup Handle;
     public TransformGroup Arm;
     public TransformGroup GripperBase;
+    public TransformGroup GripperLeft;
+    public TransformGroup GripperRight;
     public float handlepos=2.0f;
     public float Arm_Pos;
-    //will store information about input, [0]=Left Arrow[1]=RightArrow,[2] up,[3] down[4]=<,[5]=>,
-    public boolean[] IsKeyPressed = new boolean[6];
+    public float Gripper_PosL=-0.4f;
+    public float Gripper_PosR=0.4f;
+    //will store information about input, [0]=Left Arrow[1]=RightArrow,[2] up,[3] down[4]=<,[5]=>,[6] k,[7] l
+    public boolean[] IsKeyPressed = new boolean[8];
     public float CylinderR_Angle=0.f;
      private WakeupCondition wc = new WakeupOnElapsedTime(70);   //will update every 70 ms
   
@@ -47,12 +51,14 @@ public class SimpleBehavior extends Behavior
         this.wakeupOn(wc);
     }
     
-    SimpleBehavior(TransformGroup CylinderR,TransformGroup Handle,TransformGroup Arm,TransformGroup GripperBase)
+    SimpleBehavior(TransformGroup CylinderR,TransformGroup Handle,TransformGroup Arm,TransformGroup GripperBase,TransformGroup GripperLeft,TransformGroup GripperRight)
      {
              this.CylinderR = CylinderR;
              this.Handle = Handle;
              this.Arm = Arm;
              this.GripperBase= GripperBase;
+             this.GripperLeft=GripperLeft;
+             this.GripperRight=GripperRight;
             
      }
     public void CheckForRotation()
@@ -72,6 +78,12 @@ public class SimpleBehavior extends Behavior
         
         if(IsKeyPressed[2]&&handlepos<5.f) handlepos+=0.3f;
         if(IsKeyPressed[3]&&handlepos>1.25f)handlepos-=0.3f;
+    }
+    public void CheckForGripperMove()
+    {
+        
+        if(IsKeyPressed[6]&&Gripper_PosL<-0.2f) {Gripper_PosL+=0.1f; Gripper_PosR-=0.1f;}
+        if(IsKeyPressed[7]&&Gripper_PosL>-0.4f) {Gripper_PosL-=0.1f; Gripper_PosR+=0.1f;}
     }
     public void SetCylinder()
     {
@@ -127,15 +139,42 @@ public class SimpleBehavior extends Behavior
         
         GripperBase.setTransform(Fin);
     }
+    public void SetGripperLeft()
+    {
+        Transform3D setUp = new Transform3D();
+        Transform3D Rot = new Transform3D();
+        Transform3D Fin = new Transform3D();
+        setUp.setTranslation(new Vector3f(Gripper_PosL,handlepos,1.5f+Arm_Pos+2.1f));
+        Rot.rotY(CylinderR_Angle);
+        Fin.mul(Rot,setUp);
+        
+        GripperLeft.setTransform(Fin);
+        
+    }
+    public void SetGripperRight()
+    {
+        Transform3D setUp = new Transform3D();
+        Transform3D Rot = new Transform3D();
+        Transform3D Fin = new Transform3D();
+        setUp.setTranslation(new Vector3f(Gripper_PosR,handlepos,1.5f+Arm_Pos+2.1f));
+        Rot.rotY(CylinderR_Angle);
+        Fin.mul(Rot,setUp);
+        
+        GripperRight.setTransform(Fin);
+        
+    }
      private void update()
          {
              CheckForRotation();
              CheckForHandleMovement();
              CheckForArm();
+             CheckForGripperMove();
              SetCylinder();
              SetHandle();
              SetArm();
              SetGripperBase();
+             SetGripperLeft();
+             SetGripperRight();
           
             
              
