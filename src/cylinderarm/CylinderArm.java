@@ -69,6 +69,8 @@ public class CylinderArm  extends Applet implements KeyListener
            if (e.getKeyCode()==KeyEvent.VK_DOWN) {ArmBehavior.IsKeyPressed[3] = true;}
            if (e.getKeyCode()==KeyEvent.VK_COMMA) {ArmBehavior.IsKeyPressed[4] = true;}   
            if (e.getKeyCode()==KeyEvent.VK_PERIOD) {ArmBehavior.IsKeyPressed[5] = true;}
+           if (e.getKeyCode()==KeyEvent.VK_K) {ArmBehavior.IsKeyPressed[6] = true;}   
+           if (e.getKeyCode()==KeyEvent.VK_L) {ArmBehavior.IsKeyPressed[7] = true;}
         
     }
     
@@ -81,6 +83,8 @@ public class CylinderArm  extends Applet implements KeyListener
         if (e.getKeyCode()==KeyEvent.VK_DOWN) {ArmBehavior.IsKeyPressed[3] = false;}
         if (e.getKeyCode()==KeyEvent.VK_COMMA) {ArmBehavior.IsKeyPressed[4] = false;}   
         if (e.getKeyCode()==KeyEvent.VK_PERIOD) {ArmBehavior.IsKeyPressed[5] = false;}
+         if (e.getKeyCode()==KeyEvent.VK_K) {ArmBehavior.IsKeyPressed[6] = false;}   
+        if (e.getKeyCode()==KeyEvent.VK_L) {ArmBehavior.IsKeyPressed[7] = false;}
         
     }
      
@@ -106,6 +110,10 @@ public class CylinderArm  extends Applet implements KeyListener
           Arm.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           TransformGroup GripperBase = new TransformGroup();
           GripperBase.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+          TransformGroup GripperLeft = new TransformGroup();
+          GripperLeft.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+           TransformGroup GripperRight = new TransformGroup();
+          GripperRight.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           
           //Tutaj chciałem wrzucić do prgramu plik obj ale nie wyszło
           {
@@ -135,6 +143,10 @@ public class CylinderArm  extends Applet implements KeyListener
           Arm.addChild(new Cylinder(0.15f,3f,Cylinder.GENERATE_TEXTURE_COORDS,ap));
           //Adds GripperBase to roboot
           GripperBase.addChild(new Box(0.5f,0.5f,0.2f,Box.GENERATE_TEXTURE_COORDS,ap_Box));
+          //Adds GripperLeft to robot
+          GripperLeft.addChild(new Box(0.1f,0.5f,0.3f,Box.GENERATE_TEXTURE_COORDS,ap));
+          //Adds GripperRight to robot
+          GripperRight.addChild(new Box(0.1f,0.5f,0.3f,Box.GENERATE_TEXTURE_COORDS,ap));
           //loads texture image
           ImageComponent2D mImage = loader.getImage( );     
           Texture2D  tx2 = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, mImage.getWidth(), mImage.getHeight());
@@ -161,7 +173,9 @@ public class CylinderArm  extends Applet implements KeyListener
           objRoot.addChild(Handle);
           objRoot.addChild(Arm);
           objRoot.addChild(GripperBase);
-          ArmBehavior = new SimpleBehavior(CylinderR,Handle,Arm,GripperBase);
+          objRoot.addChild(GripperLeft);
+          objRoot.addChild(GripperRight);
+          ArmBehavior = new SimpleBehavior(CylinderR,Handle,Arm,GripperBase,GripperLeft,GripperRight);
           ArmBehavior.setSchedulingBounds(bounds);
           objRoot.addChild(ArmBehavior);
           
