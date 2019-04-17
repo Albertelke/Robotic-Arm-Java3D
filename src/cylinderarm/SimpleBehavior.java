@@ -39,6 +39,7 @@ public class SimpleBehavior extends Behavior
     public float TestObj_Angle=0.0f;
     public float TestObj_Pos=2.0f;
     public float TestObj_PosY=2.0f;
+    public float TestObj_Vel=0.0f;
     //will store information about input, [0]=Left Arrow[1]=RightArrow,[2] up,[3] down[4]=<,[5]=>,[6] k,[7] l
     public boolean[] IsKeyPressed = new boolean[8];
     public float CylinderR_Angle=0.f;
@@ -85,7 +86,7 @@ public class SimpleBehavior extends Behavior
     {
         
         if(IsKeyPressed[2]&&handlepos<5.f) handlepos+=0.1f;
-        if(IsKeyPressed[3]&&handlepos>1.25f)handlepos-=0.1f;
+        if(IsKeyPressed[3]&&handlepos>1.05f)handlepos-=0.1f;
     }
     public void CheckForGripperMove()
     {
@@ -185,6 +186,7 @@ public class SimpleBehavior extends Behavior
         TestObj_Angle = CylinderR_Angle;
         TestObj_PosY=handlepos;
         TestObj.setTransform(Fin);
+        TestObj_Vel=0.0f;
             
         }
         else
@@ -193,7 +195,13 @@ public class SimpleBehavior extends Behavior
         setUp.setTranslation(new Vector3f(0.f,TestObj_PosY,TestObj_Pos));
         Rot.rotY(TestObj_Angle);
         Fin.mul(Rot,setUp);
-        
+        //Setting gravity force
+        if(TestObj_PosY<=0.95f) TestObj_Vel=0.f;
+        else 
+        {
+            TestObj_Vel-=0.007f;
+            TestObj_PosY+=TestObj_Vel;
+        }
         TestObj.setTransform(Fin);
         }
        
@@ -202,9 +210,11 @@ public class SimpleBehavior extends Behavior
     public boolean IsInRange()
     {
        
-       if (CylinderR_Angle>=0.0f&&CylinderR_Angle >= TestObj_Angle-0.07f && CylinderR_Angle <= TestObj_Angle+0.07f &&abs(Gripper_PosR)<0.4f&&handlepos>=TestObj_PosY-0.15f&&handlepos<=TestObj_PosY+0.15f)
+       if (CylinderR_Angle>=0.0f&&CylinderR_Angle >= TestObj_Angle-0.07f && CylinderR_Angle <= TestObj_Angle+0.07f
+          &&abs(Gripper_PosR)<0.36f&&handlepos>=TestObj_PosY-0.3f&&handlepos<=TestObj_PosY+0.3f&&TestObj_Pos>=1.5f+Arm_Pos+1.7f&&TestObj_Pos<=1.5f+Arm_Pos+2.3f)
                return true; 
-       else if(CylinderR_Angle<= TestObj_Angle+0.07f && CylinderR_Angle>= TestObj_Angle-0.07f&&abs(Gripper_PosR)<0.4f&&handlepos>=TestObj_PosY-0.25f&&handlepos<=TestObj_PosY+0.25f)
+       else if(CylinderR_Angle<= TestObj_Angle+0.07f && CylinderR_Angle>= TestObj_Angle-0.07f&&abs(Gripper_PosR)<0.36f&&handlepos>=TestObj_PosY-0.3f
+               &&handlepos<=TestObj_PosY+0.3f&&TestObj_Pos>=1.5f+Arm_Pos+1.7f&&TestObj_Pos<=1.5f+Arm_Pos+2.3f)
                 {
                    return true;          
                 }    
