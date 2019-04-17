@@ -27,6 +27,7 @@ public class SimpleBehavior extends Behavior
     public TransformGroup CylinderR;
     public TransformGroup Handle;
     public TransformGroup Arm;
+    public TransformGroup GripperBase;
     public float handlepos=2.0f;
     public float Arm_Pos;
     //will store information about input, [0]=Left Arrow[1]=RightArrow,[2] up,[3] down[4]=<,[5]=>,
@@ -46,11 +47,12 @@ public class SimpleBehavior extends Behavior
         this.wakeupOn(wc);
     }
     
-    SimpleBehavior(TransformGroup CylinderR,TransformGroup Handle,TransformGroup Arm)
+    SimpleBehavior(TransformGroup CylinderR,TransformGroup Handle,TransformGroup Arm,TransformGroup GripperBase)
      {
              this.CylinderR = CylinderR;
              this.Handle = Handle;
              this.Arm = Arm;
+             this.GripperBase= GripperBase;
             
      }
     public void CheckForRotation()
@@ -91,6 +93,12 @@ public class SimpleBehavior extends Behavior
         Fin.mul(Rot,setUp);
         Handle.setTransform(Fin);
     }
+    public void SetPart()
+    {
+        Transform3D Scale=new Transform3D();
+        Scale.setScale(1.f);
+        
+    }
     public void SetArm()
     {
         Transform3D setUp = new Transform3D();
@@ -108,6 +116,17 @@ public class SimpleBehavior extends Behavior
    
         Arm.setTransform(Fin);
     }
+    public void SetGripperBase()
+    {
+        Transform3D setUp = new Transform3D();
+        Transform3D Rot = new Transform3D();
+        Transform3D Fin = new Transform3D();
+        setUp.setTranslation(new Vector3f(0.0f,handlepos,1.5f+Arm_Pos+1.6f));
+        Rot.rotY(CylinderR_Angle);
+        Fin.mul(Rot,setUp);
+        
+        GripperBase.setTransform(Fin);
+    }
      private void update()
          {
              CheckForRotation();
@@ -116,6 +135,9 @@ public class SimpleBehavior extends Behavior
              SetCylinder();
              SetHandle();
              SetArm();
+             SetGripperBase();
+          
+            
              
          }
 }
