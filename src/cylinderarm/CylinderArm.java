@@ -114,6 +114,8 @@ public class CylinderArm  extends Applet implements KeyListener
           GripperLeft.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
            TransformGroup GripperRight = new TransformGroup();
           GripperRight.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+          TransformGroup TestObj = new TransformGroup();
+          TestObj.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           
           //Tutaj chciałem wrzucić do prgramu plik obj ale nie wyszło
           {
@@ -147,6 +149,8 @@ public class CylinderArm  extends Applet implements KeyListener
           GripperLeft.addChild(new Box(0.1f,0.5f,0.3f,Box.GENERATE_TEXTURE_COORDS,ap));
           //Adds GripperRight to robot
           GripperRight.addChild(new Box(0.1f,0.5f,0.3f,Box.GENERATE_TEXTURE_COORDS,ap));
+           //Adds Test object that should be moved by robotic arm
+          TestObj.addChild(new Sphere(0.23f,Sphere.GENERATE_TEXTURE_COORDS,ap));
           //loads texture image
           ImageComponent2D mImage = loader.getImage( );     
           Texture2D  tx2 = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, mImage.getWidth(), mImage.getHeight());
@@ -175,7 +179,8 @@ public class CylinderArm  extends Applet implements KeyListener
           objRoot.addChild(GripperBase);
           objRoot.addChild(GripperLeft);
           objRoot.addChild(GripperRight);
-          ArmBehavior = new SimpleBehavior(CylinderR,Handle,Arm,GripperBase,GripperLeft,GripperRight);
+          objRoot.addChild(TestObj);
+          ArmBehavior = new SimpleBehavior(CylinderR,Handle,Arm,GripperBase,GripperLeft,GripperRight,TestObj);
           ArmBehavior.setSchedulingBounds(bounds);
           objRoot.addChild(ArmBehavior);
           
