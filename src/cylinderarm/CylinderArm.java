@@ -94,6 +94,8 @@ public class CylinderArm  extends Applet implements KeyListener
       {
           //Creating base node and adding others
           BranchGroup objRoot = new BranchGroup();
+          
+          
           TransformGroup transBox = new TransformGroup();
           transBox.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           TransformGroup CylinderR=new TransformGroup();
@@ -102,14 +104,22 @@ public class CylinderArm  extends Applet implements KeyListener
           Handle.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           TransformGroup Arm=new TransformGroup();
           Arm.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+          TransformGroup GripperBase = new TransformGroup();
+          GripperBase.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           
-
-        
-          
-          objRoot.addChild(transBox);
-          objRoot.addChild(CylinderR);
-          objRoot.addChild(Handle);
-          objRoot.addChild(Arm);
+          //Tutaj chciałem wrzucić do prgramu plik obj ale nie wyszło
+          {
+         // TransformGroup part = new TransformGroup();
+         //part.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        //   ObjectFile f = new ObjectFile();
+          // Scene s = null;
+           
+   // try{
+    //       s = f.load("gfx/chwytak.obj");
+      //     part.addChild(s.getSceneGroup());
+    //}catch(Exception e){System.exit(1);}
+        //  objRoot.addChild(part);
+      }
           ap.setMaterial(new Material( black,black,black,black,0.0f));
           ap_Box.setMaterial(new Material(black,black,black,black,0.0f));
           //Adds stable, base component
@@ -123,6 +133,8 @@ public class CylinderArm  extends Applet implements KeyListener
           Handle.addChild(new Box(0.5f,0.5f,0.5f,Box.GENERATE_TEXTURE_COORDS,ap_Box));
           //Adds Arm to robot
           Arm.addChild(new Cylinder(0.15f,3f,Cylinder.GENERATE_TEXTURE_COORDS,ap));
+          //Adds GripperBase to roboot
+          GripperBase.addChild(new Box(0.5f,0.5f,0.2f,Box.GENERATE_TEXTURE_COORDS,ap_Box));
           //loads texture image
           ImageComponent2D mImage = loader.getImage( );     
           Texture2D  tx2 = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, mImage.getWidth(), mImage.getHeight());
@@ -133,17 +145,23 @@ public class CylinderArm  extends Applet implements KeyListener
           tx3.setImage(0, BoxImage);
           ap_Box.setTexture(tx3);
           //Lightning
+          
           BoundingSphere bounds = new BoundingSphere(new Point3d(0.0,0.0,0.0), 1000.0f);
           AmbientLight alldirlight = new AmbientLight(ultramaryna);
           alldirlight.setInfluencingBounds(bounds);
           objRoot.addChild(alldirlight); // adds light in all direction 
           Color3f lightCol = new Color3f(1f, 1f, 1f);
-          Vector3f lightDir = new Vector3f(4.0f, -7.0f, -12.0f);
+          Vector3f lightDir = new Vector3f(0.0f, 0.0f, 0.0f);
           DirectionalLight light = new DirectionalLight (lightCol,lightDir);
           light.setInfluencingBounds(bounds);
           objRoot.addChild(light);// adds light in specific direction
           
-          ArmBehavior = new SimpleBehavior(CylinderR,Handle,Arm);
+          objRoot.addChild(transBox);
+          objRoot.addChild(CylinderR);
+          objRoot.addChild(Handle);
+          objRoot.addChild(Arm);
+          objRoot.addChild(GripperBase);
+          ArmBehavior = new SimpleBehavior(CylinderR,Handle,Arm,GripperBase);
           ArmBehavior.setSchedulingBounds(bounds);
           objRoot.addChild(ArmBehavior);
           
