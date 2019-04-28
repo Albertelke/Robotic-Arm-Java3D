@@ -18,6 +18,7 @@ import com.sun.j3d.utils.image.TextureLoader;
 import com.sun.j3d.utils.universe.SimpleUniverse;
 import java.applet.Applet;
 import java.awt.BorderLayout;
+import java.awt.Button;
 import java.awt.Color;
 import java.awt.GraphicsConfiguration;
 import java.awt.event.KeyEvent;
@@ -45,12 +46,19 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+import javax.swing.JFrame;
+import java.awt.EventQueue;
+import java.awt.Panel;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JPanel;
 
 /**
  *
  * @author Albert, Michal
  */
-public class CylinderArm  extends Applet implements KeyListener
+public class CylinderArm  extends Applet implements KeyListener, ActionListener
 {
     SimpleBehavior ArmBehavior;
     Appearance ap = new Appearance();
@@ -58,6 +66,9 @@ public class CylinderArm  extends Applet implements KeyListener
     Color3f TestCol = new Color3f(0.941f, 0.941f, 0.937f);
     Color3f ultramaryna = new Color3f(0.227f, 0.909f, 0.949f); //
     Color3f black = new Color3f(1.0f,1.0f,1.0f);
+    private Button test = new Button("Set");
+    private TextField angleTextField = new TextField("Angle",3);
+    Panel p = new Panel();
     //KeyPressed, keyReleased ,keyTyped will allow handling inputs
     public void keyPressed(KeyEvent e) 
     {
@@ -93,10 +104,29 @@ public class CylinderArm  extends Applet implements KeyListener
         
         
     }
+    public void actionPerformed(ActionEvent e)
+    {
+        if(e.getSource()==test)
+        {
+            //check Wheter String in TextField is numeric and set Angle of Robot arm to given value
+            try {
+        float d = Float.parseFloat(angleTextField.getText());
+         ArmBehavior.CylinderR_Angle=(float)Math.toRadians(d);
+        } catch (NumberFormatException | NullPointerException nfe) {}
+            
+        }
+        
+    }
       
     public BranchGroup createSceneGraph()
       {
+         //create Buttons that will have functionalities
+         p.add(test);
+         p.add(angleTextField);
+         p.setBackground(Color.blue);
+         add("West",p);
           //Creating base node and adding others
+            test.addActionListener(this);
           BranchGroup objRoot = new BranchGroup();
           
           
@@ -180,6 +210,7 @@ public class CylinderArm  extends Applet implements KeyListener
           objRoot.addChild(GripperLeft);
           objRoot.addChild(GripperRight);
           objRoot.addChild(TestObj);
+          
           ArmBehavior = new SimpleBehavior(CylinderR,Handle,Arm,GripperBase,GripperLeft,GripperRight,TestObj);
           ArmBehavior.setSchedulingBounds(bounds);
           objRoot.addChild(ArmBehavior);
@@ -191,6 +222,7 @@ public class CylinderArm  extends Applet implements KeyListener
     
      public CylinderArm()
      {
+        
          GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration(); 
          setLayout(new BorderLayout()); 
          //tworzymy nasze plotno
@@ -216,7 +248,7 @@ public class CylinderArm  extends Applet implements KeyListener
      {
         System.setProperty("sun.awt.erasebackground", "true");
 
-   CylinderArm test = new CylinderArm();
+        CylinderArm test = new CylinderArm();
   // test.addKeyListener(test);
 
 
