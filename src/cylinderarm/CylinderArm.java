@@ -20,6 +20,7 @@ import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -48,6 +49,8 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 import javax.swing.JFrame;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Panel;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -62,13 +65,18 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
 {
     SimpleBehavior ArmBehavior;
     Appearance ap = new Appearance();
+    Appearance ap_testObj = new Appearance();
     Appearance ap_Box = new Appearance();
     Color3f TestCol = new Color3f(0.941f, 0.941f, 0.937f);
     Color3f ultramaryna = new Color3f(0.227f, 0.909f, 0.949f); //
     Color3f black = new Color3f(1.0f,1.0f,1.0f);
     private Button test = new Button("Set");
-    private TextField angleTextField = new TextField("Angle",3);
-    Panel p = new Panel();
+    // creates button that will control getting inputs of repeatable movement
+     private Button Start_Stop = new Button("Start");
+     private Button GO = new Button("GO");
+     Font font = new Font("SansSerif", Font.PLAIN,30);
+    private TextField angleTextField = new TextField("Angle",6);
+    Panel p = new Panel(new GridLayout(17,3,3,3));
     //KeyPressed, keyReleased ,keyTyped will allow handling inputs
     public void keyPressed(KeyEvent e) 
     {
@@ -115,18 +123,49 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
         } catch (NumberFormatException | NullPointerException nfe) {}
             
         }
+        if(e.getSource()==Start_Stop)
+        {
+            if(!ArmBehavior.IsGettingInput)
+            {
+                Start_Stop.setLabel("Stop");
+                ArmBehavior.IsGettingInput=true;
+            }
+            
+            else
+            {
+               Start_Stop.setLabel("Start");
+               ArmBehavior.IsGettingInput=false;
+
+            }
+        }
+        if(e.getSource()==GO)
+        {
+            ArmBehavior.IsSetToGo=true;
+        }
         
     }
       
     public BranchGroup createSceneGraph()
       {
-         //create Buttons that will have functionalities
-         p.add(test);
-         p.add(angleTextField);
+        // p.setLayout(null);
+         // test.setLayout()
          p.setBackground(Color.blue);
-         add("West",p);
+         //angleTextField.setSize(80,80);
+         p.add(test,BorderLayout.PAGE_END);
+          angleTextField.setFont(font);
+         p.add(angleTextField,BorderLayout.LINE_START);
+         p.add(Start_Stop,BorderLayout.PAGE_START);
+         p.add(GO);
+         //test.setLocation(100,100);
+        add("West" ,p);
+        
+         
+         
+         
           //Creating base node and adding others
             test.addActionListener(this);
+            Start_Stop.addActionListener(this);
+          
           BranchGroup objRoot = new BranchGroup();
           
           
@@ -162,6 +201,7 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
       }
           ap.setMaterial(new Material( black,black,black,black,0.0f));
           ap_Box.setMaterial(new Material(black,black,black,black,0.0f));
+          ap_testObj.setMaterial(new Material(black,black,black,black,0.0f));
           //Adds stable, base component
           transBox.addChild(new Box(0.5f,0.5f,0.5f,Box.GENERATE_TEXTURE_COORDS,ap_Box));
           //Adds Cylinder that can be rotate around own axis
@@ -169,6 +209,7 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
           //Adds simple texture to ap Appearance
           TextureLoader loader = new TextureLoader("gfx/silver.jpg",null);
           TextureLoader loaderBox = new TextureLoader("gfx/Metal_Black_Brushed.jpg",null);
+          TextureLoader loadertest_Obj = new TextureLoader("gfx/test.png",null);
           //Adds handle that is attached to CylinderR
           Handle.addChild(new Box(0.5f,0.5f,0.5f,Box.GENERATE_TEXTURE_COORDS,ap_Box));
           //Adds Arm to robot
@@ -180,7 +221,7 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
           //Adds GripperRight to robot
           GripperRight.addChild(new Box(0.1f,0.5f,0.3f,Box.GENERATE_TEXTURE_COORDS,ap));
            //Adds Test object that should be moved by robotic arm
-          TestObj.addChild(new Sphere(0.23f,Sphere.GENERATE_TEXTURE_COORDS,ap));
+          TestObj.addChild(new Sphere(0.23f,Sphere.GENERATE_TEXTURE_COORDS,ap_testObj));
           //loads texture image
           ImageComponent2D mImage = loader.getImage( );     
           Texture2D  tx2 = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, mImage.getWidth(), mImage.getHeight());
@@ -190,6 +231,10 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
           Texture2D  tx3 = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, mImage.getWidth(), mImage.getHeight());
           tx3.setImage(0, BoxImage);
           ap_Box.setTexture(tx3);
+          ImageComponent2D test_ObjImage = loadertest_Obj.getImage( );     
+          Texture2D  tx4 = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, mImage.getWidth(), mImage.getHeight());
+          tx4.setImage(0, test_ObjImage);
+          ap_testObj.setTexture(tx4);
           //Lightning
           
           BoundingSphere bounds = new BoundingSphere(new Point3d(0.0,0.0,0.0), 1000.0f);
