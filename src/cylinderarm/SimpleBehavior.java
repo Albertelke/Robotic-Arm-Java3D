@@ -4,12 +4,14 @@
  * and open the template in the editor.
  */
 package cylinderarm;
+import java.awt.List;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import javax.media.j3d.Behavior;
 import javax.media.j3d.Transform3D;
@@ -40,12 +42,14 @@ public class SimpleBehavior extends Behavior
     public float TestObj_Pos=2.0f;
     public float TestObj_PosY=2.0f;
     public float TestObj_Vel=0.0f;
+    public float CylinderR_Angle=0.f;
+    private int iterator=0;
+    public ArrayList <MovementContainer> Moves = new ArrayList<MovementContainer>();
     //will store information about input, [0]=Left Arrow[1]=RightArrow,[2] up,[3] down[4]=<,[5]=>,[6] k,[7] l,
     public boolean[] IsKeyPressed = new boolean[8];
     //will contain information whether should sava position for repeatable movement
     public boolean IsGettingInput=false;
     public boolean IsSetToGo=false;
-    public float CylinderR_Angle=0.f;
      private WakeupCondition wc = new WakeupOnElapsedTime(20);   //will update every N ms
     
   
@@ -176,6 +180,10 @@ public class SimpleBehavior extends Behavior
         GripperRight.setTransform(Fin);
         
     }
+    public void setImput()
+    {
+        
+    }
     public void SetTestObj()
     {
         Transform3D setUp = new Transform3D();
@@ -227,6 +235,12 @@ public class SimpleBehavior extends Behavior
                 }    
        return false;
     }
+    
+    private void setInput()
+    {
+        Moves.add(new MovementContainer(handlepos,Arm_Pos,Gripper_PosL,Gripper_PosR));
+  
+    }
      private void update()
          {
              //checking input data
@@ -234,13 +248,34 @@ public class SimpleBehavior extends Behavior
              CheckForHandleMovement();
              CheckForArm();
              CheckForGripperMove();
+             if(IsGettingInput)
+             setInput();
              //setting posoition of robotic arm components
+             if(IsSetToGo && (IsGettingInput==false))
+             {
+                 if(iterator<Moves.size())
+                 {
+                    handlepos=Moves.get(iterator).handlepos;
+                    Arm_Pos=Moves.get(iterator).Arm_Pos;
+                     Gripper_PosL=Moves.get(iterator).Gripper_PosL;
+                     Gripper_PosR=Moves.get(iterator).Gripper_PosR;
+                     
+                 }
+                 else iterator=0;
+                 iterator++;
+                 
+             }
+             
+             
              SetCylinder();
              SetHandle();
              SetArm();
              SetGripperBase();
              SetGripperLeft();
              SetGripperRight();
+                     
+             
+            
              //setting position of test objects
              SetTestObj();
              
