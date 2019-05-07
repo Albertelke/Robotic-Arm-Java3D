@@ -40,10 +40,14 @@ public class SimpleBehavior extends Behavior
     public float TestObj_Pos=2.0f;
     public float TestObj_PosY=2.0f;
     public float TestObj_Vel=0.0f;
-    //will store information about input, [0]=Left Arrow[1]=RightArrow,[2] up,[3] down[4]=<,[5]=>,[6] k,[7] l
+    //will store information about input, [0]=Left Arrow[1]=RightArrow,[2] up,[3] down[4]=<,[5]=>,[6] k,[7] l,
     public boolean[] IsKeyPressed = new boolean[8];
+    //will contain information whether should sava position for repeatable movement
+    public boolean IsGettingInput=false;
+    public boolean IsSetToGo=false;
     public float CylinderR_Angle=0.f;
-     private WakeupCondition wc = new WakeupOnElapsedTime(20);   //will update every 70 ms
+     private WakeupCondition wc = new WakeupOnElapsedTime(20);   //will update every N ms
+    
   
     public void initialize()
     {
@@ -177,6 +181,7 @@ public class SimpleBehavior extends Behavior
         Transform3D setUp = new Transform3D();
         Transform3D Rot = new Transform3D();
         Transform3D Fin = new Transform3D();
+        //If test object is catch
         if(IsInRange())
         {
         setUp.setTranslation(new Vector3f(0.0f,handlepos,1.5f+Arm_Pos+2.0f));
@@ -189,6 +194,7 @@ public class SimpleBehavior extends Behavior
         TestObj_Vel=0.0f;
             
         }
+        //If test object isn't catch
         else
         {
           if(abs(TestObj_Angle)>6.25f) TestObj_Angle=0.0f;
@@ -207,6 +213,7 @@ public class SimpleBehavior extends Behavior
        
         
     }
+    //this method check if test objects is in range to be catch by gripper
     public boolean IsInRange()
     {
        
