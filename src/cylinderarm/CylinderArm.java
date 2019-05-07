@@ -129,6 +129,8 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
             {
                 Start_Stop.setLabel("Stop");
                 ArmBehavior.IsGettingInput=true;
+                ArmBehavior.IsSetToGo=false;
+                ArmBehavior.Moves.clear();
             }
             
             else
@@ -140,7 +142,9 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
         }
         if(e.getSource()==GO)
         {
-            ArmBehavior.IsSetToGo=true;
+            if(ArmBehavior.IsSetToGo) ArmBehavior.IsSetToGo=false;
+            else  ArmBehavior.IsSetToGo=true;
+            
         }
         
     }
@@ -155,7 +159,7 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
           angleTextField.setFont(font);
          p.add(angleTextField,BorderLayout.LINE_START);
          p.add(Start_Stop,BorderLayout.PAGE_START);
-         p.add(GO);
+         p.add(GO,BorderLayout.LINE_START);
          //test.setLocation(100,100);
         add("West" ,p);
         
@@ -164,6 +168,7 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
          
           //Creating base node and adding others
             test.addActionListener(this);
+            GO.addActionListener(this);
             Start_Stop.addActionListener(this);
           
           BranchGroup objRoot = new BranchGroup();
