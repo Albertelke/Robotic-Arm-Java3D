@@ -262,7 +262,7 @@ public class SimpleBehavior extends Behavior
     
     private void setInput()
     {
-        Moves.add(new MovementContainer(handlepos,Arm_Pos,Gripper_PosL,Gripper_PosR));
+        Moves.add(new MovementContainer(handlepos,Arm_Pos,Gripper_PosL,Gripper_PosR,CylinderR_Angle));
   
     }
      private void update()
@@ -283,6 +283,7 @@ public class SimpleBehavior extends Behavior
                     Arm_Pos=Moves.get(iterator).Arm_Pos;
                      Gripper_PosL=Moves.get(iterator).Gripper_PosL;
                      Gripper_PosR=Moves.get(iterator).Gripper_PosR;
+                     CylinderR_Angle=Moves.get(iterator).CylinderR_Angle;
                      
                  }
                  else iterator=0;
