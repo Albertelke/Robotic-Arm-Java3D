@@ -192,10 +192,6 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
           TransformGroup TestObj = new TransformGroup();
           TestObj.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           
-           PointSound sound = new PointSound();
-          sound.setCapability(PointSound.ALLOW_ENABLE_WRITE);
-          sound.setCapability(PointSound.ALLOW_INITIAL_GAIN_WRITE);
-          sound.setCapability(PointSound.ALLOW_SOUND_DATA_WRITE);
           ap.setMaterial(new Material( black,black,black,black,0.0f));
           ap_Box.setMaterial(new Material(black,black,black,black,0.0f));
           ap_testObj.setMaterial(new Material(black,black,black,black,0.0f));
@@ -243,8 +239,6 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
           DirectionalLight light = new DirectionalLight (lightCol,lightDir);
           light.setInfluencingBounds(bounds);
           objRoot.addChild(light);// adds light in specific direction
-          sound.setSchedulingBounds(bounds);
-          transBox.addChild(sound);
           objRoot.addChild(transBox);
           objRoot.addChild(CylinderR);
           objRoot.addChild(Handle);
