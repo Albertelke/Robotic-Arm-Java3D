@@ -7,6 +7,8 @@ package cylinderarm;
 import java.awt.List;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -20,6 +22,7 @@ import javax.media.j3d.WakeupCondition;
 import javax.media.j3d.WakeupOnAWTEvent;
 import javax.media.j3d.WakeupOnElapsedTime;
 import javax.vecmath.Vector3f;
+import sun.audio.AudioPlayer;
 
 /**
  *
@@ -44,6 +47,7 @@ public class SimpleBehavior extends Behavior
     public float TestObj_Vel=0.0f;
     public float CylinderR_Angle=0.f;
     private int iterator=0;
+    private boolean IsDropped=false;
     public ArrayList <MovementContainer> Moves = new ArrayList<MovementContainer>();
     //will store information about input, [0]=Left Arrow[1]=RightArrow,[2] up,[3] down[4]=<,[5]=>,[6] k,[7] l,
     public boolean[] IsKeyPressed = new boolean[8];
@@ -156,6 +160,14 @@ public class SimpleBehavior extends Behavior
         
         GripperBase.setTransform(Fin);
     }
+    public void PlaySound()
+    {
+        try
+        {
+            AudioPlayer.player.start(new FileInputStream("gfx/bum.wav"));
+        } catch (FileNotFoundException fnfe){System.out.println("cant read file");};
+         
+    }
     public void SetGripperLeft()
     {
         Transform3D setUp = new Transform3D();
@@ -210,9 +222,21 @@ public class SimpleBehavior extends Behavior
         Rot.rotY(TestObj_Angle);
         Fin.mul(Rot,setUp);
         //Setting gravity force
-        if(TestObj_PosY<=0.95f) TestObj_Vel=0.f;
+        if(TestObj_PosY<=0.95f)
+        {
+         
+            TestObj_Vel=0.f;
+            if(IsDropped)
+            {
+               PlaySound();
+               IsDropped=false;
+
+                
+            }
+        }
         else 
         {
+            IsDropped=true;
             TestObj_Vel-=0.007f;
             TestObj_PosY+=TestObj_Vel;
         }
