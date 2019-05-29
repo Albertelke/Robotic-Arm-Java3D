@@ -222,7 +222,7 @@ public class SimpleBehavior extends Behavior
         Rot.rotY(TestObj_Angle);
         Fin.mul(Rot,setUp);
         //Setting gravity force
-        if(TestObj_PosY<=0.95f)
+        if(TestObj_PosY<=0.85f)
         {
          
             TestObj_Vel=0.f;
@@ -253,7 +253,7 @@ public class SimpleBehavior extends Behavior
           &&abs(Gripper_PosR)<0.36f&&handlepos>=TestObj_PosY-0.3f&&handlepos<=TestObj_PosY+0.3f&&TestObj_Pos>=1.5f+Arm_Pos+1.7f&&TestObj_Pos<=1.5f+Arm_Pos+2.3f)
                return true; 
        else if(CylinderR_Angle<= TestObj_Angle+0.07f && CylinderR_Angle>= TestObj_Angle-0.07f&&abs(Gripper_PosR)<0.36f&&handlepos>=TestObj_PosY-0.3f
-               &&handlepos<=TestObj_PosY+0.3f&&TestObj_Pos>=1.5f+Arm_Pos+1.7f&&TestObj_Pos<=1.5f+Arm_Pos+2.3f)
+               &&handlepos<=TestObj_PosY+0.4f&&TestObj_Pos>=1.5f+Arm_Pos+1.7f&&TestObj_Pos<=1.5f+Arm_Pos+2.3f)
                 {
                    return true;          
                 }    
