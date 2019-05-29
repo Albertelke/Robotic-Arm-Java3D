@@ -68,6 +68,7 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
     Appearance ap = new Appearance();
     Appearance ap_testObj = new Appearance();
     Appearance ap_Box = new Appearance();
+    Appearance ap_floor = new Appearance();
     Color3f TestCol = new Color3f(0.941f, 0.941f, 0.937f);
     Color3f ultramaryna = new Color3f(0.227f, 0.909f, 0.949f); //
     Color3f black = new Color3f(1.0f,1.0f,1.0f);
@@ -177,6 +178,8 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
           
           TransformGroup transBox = new TransformGroup();
           transBox.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+           TransformGroup floor= new TransformGroup();
+          floor.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           TransformGroup CylinderR=new TransformGroup();
           CylinderR.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           TransformGroup Handle=new TransformGroup();
@@ -191,10 +194,12 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
           GripperRight.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
           TransformGroup TestObj = new TransformGroup();
           TestObj.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+          Transform3D floorT=new Transform3D();
           
           ap.setMaterial(new Material( black,black,black,black,0.0f));
           ap_Box.setMaterial(new Material(black,black,black,black,0.0f));
           ap_testObj.setMaterial(new Material(black,black,black,black,0.0f));
+          ap_floor.setMaterial(new Material(black,black,black,black,0.f));
           //Adds stable, base component
           transBox.addChild(new Box(0.5f,0.5f,0.5f,Box.GENERATE_TEXTURE_COORDS,ap_Box));
           //Adds Cylinder that can be rotate around own axis
@@ -203,6 +208,7 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
           TextureLoader loader = new TextureLoader("gfx/silver.jpg",null);
           TextureLoader loaderBox = new TextureLoader("gfx/Metal_Black_Brushed.jpg",null);
           TextureLoader loadertest_Obj = new TextureLoader("gfx/test.png",null);
+          TextureLoader loaderfloor = new TextureLoader("gfx/metal_base.jpg",null);
           //Adds handle that is attached to CylinderR
           Handle.addChild(new Box(0.5f,0.5f,0.5f,Box.GENERATE_TEXTURE_COORDS,ap_Box));
           //Adds Arm to robot
@@ -216,6 +222,11 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
            //Adds Test object that should be moved by robotic arm
           TestObj.addChild(new Sphere(0.23f,Sphere.GENERATE_TEXTURE_COORDS,ap_testObj));
           //loads texture image
+          floor.addChild(new Box(4f,0.5f,4f,Box.GENERATE_TEXTURE_COORDS,ap_floor));
+          Transform3D setFloor = new Transform3D();
+          setFloor.setTranslation(new Vector3f(0.f,0.1f,0.f));
+          floor.setTransform(setFloor);
+          
           ImageComponent2D mImage = loader.getImage( );     
           Texture2D  tx2 = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, mImage.getWidth(), mImage.getHeight());
           tx2.setImage(0, mImage);
@@ -228,8 +239,13 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
           Texture2D  tx4 = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, mImage.getWidth(), mImage.getHeight());
           tx4.setImage(0, test_ObjImage);
           ap_testObj.setTexture(tx4);
-          //Lightning
+           ImageComponent2D floorimage = loaderfloor.getImage( );     
+          Texture2D  txf = new Texture2D(Texture.BASE_LEVEL, Texture.RGBA, mImage.getWidth(), mImage.getHeight());
+          txf.setImage(0, floorimage);
+          ap_floor.setTexture(txf);
           
+          //Lightning
+         // floor.setTranslation(new Vector3f(0f,0.5f,0f));
           BoundingSphere bounds = new BoundingSphere(new Point3d(0.0,0.0,0.0), 1000.0f);
           AmbientLight alldirlight = new AmbientLight(ultramaryna);
           alldirlight.setInfluencingBounds(bounds);
@@ -238,6 +254,7 @@ public class CylinderArm  extends Applet implements KeyListener, ActionListener
           Vector3f lightDir = new Vector3f(0.0f, 0.0f, 0.0f);
           DirectionalLight light = new DirectionalLight (lightCol,lightDir);
           light.setInfluencingBounds(bounds);
+          objRoot.addChild(floor);
           objRoot.addChild(light);// adds light in specific direction
           objRoot.addChild(transBox);
           objRoot.addChild(CylinderR);
